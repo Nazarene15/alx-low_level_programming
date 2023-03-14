@@ -2,75 +2,39 @@
 #include <stdlib.h>
 
 /**
- * wrdcnt - counts the number of words in a string
- * @s: string to count
+ * argstostr - concatenates all the arguments of your program.
+ * @ac: number of arguments
+ * @av: double pointer to arguments
  *
- * Return: int of number of words
+ * Return:pointer to new string, or NULL if error
  */
-int wrdcnt(char *s)
+char *argstostr(int ac, char **av)
 {
-	int i, n = 0;
+	int i, j, k = 0, n = 0;
+	char *s;
 
-	for (i = 0; s[i]; i++)
+	if (ac <= 0 || av == NULL)
+		return (NULL);
+	for (i = 0; i < ac; i++)
 	{
-		if (s[i] == ' ')
-		{
-			if (s[i + 1] != ' ' && s[i + 1] != '\0')
-				n++;
-		}
-		else if (i == 0)
+		for (j = 0; av[i][j]; j++)
 			n++;
+		n++;
 	}
 	n++;
-	return (n);
-}
-
-/**
- * strtow - splits a string into words
- * @str: string to split
- *
- * Return: pointer to an array of strings
- */
-char **strtow(char *str)
-{
-	int i, j, k, l, n = 0, wc = 0;
-	char **w;
-
-	if (str == NULL || *str == '\0')
+	s = malloc(n * sizeof(char));
+	if (s == NULL)
 		return (NULL);
-	n = wrdcnt(str);
-	if (n == 1)
-		return (NULL);
-	w = (char **)malloc(n * sizeof(char *));
-	if (w == NULL)
-		return (NULL);
-	w[n - 1] = NULL;
-	i = 0;
-	while (str[i])
+	for (i = 0; i < ac; i++)
 	{
-		if (str[i] != ' ' && (i == 0 || str[i - 1] == ' '))
+		for (j = 0; av[i][j]; j++)
 		{
-			for (j = 1; str[i + j] != ' ' && str[i + j]; j++)
-				;
-			j++;
-			w[wc] = (char *)malloc(j * sizeof(char));
-			j--;
-			if (w[wc] == NULL)
-			{
-				for (k = 0; k < wc; k++)
-					free(w[k]);
-				free(w[n - 1]);
-				free(w);
-				return (NULL);
-			}
-			for (l = 0; l < j; l++)
-				w[wc][l] = str[i + l];
-			w[wc][l] = '\0';
-			wc++;
-			i += j;
+			s[k] = av[i][j];
+			k++;
 		}
-		else
-			i++;
+		s[k] = '\n';
+		k++;
 	}
-	return (w);
+	s[k] = '\0';
+	return (s);
 }
